@@ -28,6 +28,12 @@ shinyServer(function(input, output, session){
   
   # Function to update my_data
   update_data <- function(){
+    if(nrow(df)>5){
+      #df <- as.data.frame(read.csv(text="datetime, host1, host2, host3, host4, host5, total"))
+      #data <- as.data.frame(read.csv(text="datetime, host1, host2, host3, host4, host5, total"))
+      df <<- df[-c(min(as.numeric(rownames(df)))-1),]
+      print(df)
+    }
     df[nrow(df)+1,] <<- get_new_data()
     data <<- df[rev(rownames(df)),]
   }
@@ -46,5 +52,7 @@ shinyServer(function(input, output, session){
     hosts <<- melt(data[1:50,1:6], id=c("datetime")) 
     ggplot(hosts, aes(x=datetime, y=value, group = variable, colour = variable), size="0.5") + geom_line() + 
       theme(axis.text.x = element_text(angle = 45, hjust = 1))
+    
+  
   })
 })

@@ -8,9 +8,9 @@ library(reshape)
 
 shinyServer(fluidPage(
   # Application title
-  titlePanel("Memory Utilsation with fitted Regression line (N+2 model)"),
+  titlePanel("Memory Utilisation with Fitted Regression Line (N+2 Model)"),
   plotOutput("RegPlot"),
-  titlePanel("Memory Utilsation in each host in HVA"),
+  titlePanel("Memory Utilisation in each Host in HVX"),
   plotOutput("hostsPlot")
   
 ))
