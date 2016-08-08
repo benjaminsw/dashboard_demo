@@ -28,31 +28,26 @@ shinyServer(function(input, output, session){
   
   # Function to update my_data
   update_data <- function(){
-    if(nrow(df)>5){
-      #df <- as.data.frame(read.csv(text="datetime, host1, host2, host3, host4, host5, total"))
-      #data <- as.data.frame(read.csv(text="datetime, host1, host2, host3, host4, host5, total"))
-      df <<- df[-c(min(as.numeric(rownames(df)))-1),]
-      print(df)
+    if(nrow(df)>100){
+      df <<- df[-1, ]
     }
     df[nrow(df)+1,] <<- get_new_data()
-    data <<- df[rev(rownames(df)),]
+    rownames(df) <<- c(1:nrow(df))
   }
-  
   
   # Plot the 30 most recent values
   output$RegPlot <- renderPlot({
     invalidateLater(1000, session)
     update_data()
-    ggplot(data[1:50,], aes(datetime, total, group = 1,size = "0.5")) + geom_line() + geom_smooth(method = "lm", se = FALSE, colour="blue") +
-      theme(axis.text.x = element_text(angle = 45, hjust = 1)) #+ stat_smooth()
-
+    ggplot(df, aes(datetime, as.numeric(total), group = 1)) + geom_line() + geom_smooth(method = "lm", se = FALSE, colour="blue")  +
+      theme(axis.text.x = element_text(angle = 45, hjust = 1)) + expand_limits(y=c(0,500))# + scale_y_continuous(breaks=seq(0, 500, 50))
   })
   output$hostsPlot <- renderPlot({
     invalidateLater(1000, session)
-    hosts <<- melt(data[1:50,1:6], id=c("datetime")) 
-    ggplot(hosts, aes(x=datetime, y=value, group = variable, colour = variable), size="0.5") + geom_line() + 
-      theme(axis.text.x = element_text(angle = 45, hjust = 1))
-    
-  
+    hosts <<- melt(df[,1:6], id=c("datetime")) 
+    ggplot(hosts, aes(datetime, as.numeric(value), group = variable, colour = variable), size="0.5") + geom_line() + 
+            theme(axis.text.x = element_text(angle = 45, hjust = 1)) + expand_limits(y=c(0,100))
   })
+  
+  
 })

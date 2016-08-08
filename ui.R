@@ -10,7 +10,7 @@ shinyServer(fluidPage(
   # Application title
   titlePanel("Memory Utilisation with Fitted Regression Line (N+2 Model)"),
   plotOutput("RegPlot"),
-  titlePanel("Memory Utilisation in each Host in HVX"),
+  titlePanel("Memory Utilisation on Each Host in HVX"),
   plotOutput("hostsPlot")
   
 ))
